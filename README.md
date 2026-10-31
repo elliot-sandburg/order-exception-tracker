@@ -36,7 +36,7 @@ Tested on a synthetic benchmark dataset of **520 multi-vendor order records**:
 ## Quickstart
 
 ```bash
-git clone https://github.com/esvndburg/order-exception-tracker.git
+git clone https://github.com/elliot-sandburg/order-exception-tracker.git
 cd order-exception-tracker
 python -m venv venv
 
