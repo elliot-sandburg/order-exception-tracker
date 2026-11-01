@@ -48,3 +48,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 python generate_data.py
 python validator.py
+---
+
+## Relational Database Extension (`/sql`)
+
+To simulate enterprise ERP environments, this project includes a normalized SQLite database architecture and SQL query library:
+* **`schema.sql`**: Third Normal Form (3NF) schema with primary/foreign keys, B-tree indexes, and an executive reporting view (`v_vendor_performance_summary`).
+* **`ingest_to_db.py`**: Automated Python ETL script normalizing `orders_raw.csv` into relational tables with foreign key validation.
+* **`queries.sql` & `run_queries.py`**: Analytical SQL audit suite calculating supplier defect rates, stalled transit capital, missing shipping zips, and ledger discrepancies.
+* **`DESIGN.md`**: Comprehensive architectural design thesis prepared for the Harvard University CS50 SQL Capstone.
