@@ -1,37 +1,19 @@
 # Retail Order-Exception & Fulfillment Validation Pipeline
 
-An automated data-integrity and fulfillment validation engine built in Python (`pandas`, `openpyxl`). Ingests multi-vendor order extracts, audits operational parameters against core business rules, excludes inactive/cancelled records to prevent false positives, and generates an itemized discrepancy workbook with vendor performance scorecards.
+A portfolio project modeling contractor order management, vendor logistics, and exception auditing in building materials distribution.
 
 ## Business Context
-In contractor order fulfillment and building materials distribution, order entry defects (duplicate POs, missing jobsite postal codes, negative quantities, overdue shipments) frequently bypass standard POS checks. These issues cause delivery delays, site downtime, and vendor disputes.
-
-This pipeline automates pre-dispatch auditing to identify fulfillment exceptions before orders reach the supplier dispatch stage.
+In contractor order fulfillment, order entry defects (duplicate POs, missing jobsite postal codes, negative quantities, overdue shipments) frequently bypass standard POS checks. This project automates multi-vendor exception auditing and generates formatted Excel workbooks to speed fulfillment resolution.
 
 ## Operational Rules & Severity
-Each row represents a discrete Vendor Purchase Order (PO):
-- **CRITICAL:** Duplicate Order IDs (checked across all records to catch double-billing).
-- **CRITICAL:** Overdue Open Fulfillment (active orders where expected delivery is past the current run date).
-- **HIGH:** Missing destination postal codes on active shipments.
-- **MEDIUM:** Non-Positive line-item quantities on active shipments.
+* **CRITICAL — Duplicate Order IDs:** Evaluated across all source records to detect PO conflicts.
+* **CRITICAL — Overdue Open Orders:** Open shipments where expected delivery is prior to the benchmark date (**2026-10-31**).
+* **HIGH — Missing Destination Postal Codes:** Active shipments lacking postal routing parameters.
+* **MEDIUM — Non-Positive Quantities:** Zero or negative line-item quantities on active orders.
 
-*Exclusion Rule:* Cancelled and Inactive orders are automatically filtered prior to evaluating quantity and delivery aging rules to eliminate false positives.
+*Exclusion Rule:* Cancelled and Inactive orders are excluded from delivery-aging, missing-zip, and quantity audits to prevent false-positive alerts.
 
-## Benchmark Execution Results
-Tested on a synthetic benchmark dataset of **520 multi-vendor order records**:
-- **Total Records Ingested:** 520
-- **Total Operational Exception Events:** 33 events across 26 unique affected orders
-  - *Critical (Duplicate IDs):* 6
-  - *Critical (Overdue Open Orders):* 15
-  - *High (Missing Postal Codes):* 7
-  - *Medium (Invalid Quantities):* 5
-
-### Vendor Performance Scorecard
-| Vendor Name | CRITICAL | HIGH | MEDIUM | TOTAL_EXCEPTIONS |
-| :--- | :---: | :---: | :---: | :---: |
-| **Mohawk Industries** | 7 | 2 | 2 | **11** |
-| **Shaw Floors** | 6 | 2 | 1 | **9** |
-| **Armstrong Flooring** | 5 | 2 | 1 | **8** |
-| **Daltile** | 3 | 1 | 1 | **5** |
+---
 
 ## Quickstart
 
@@ -46,14 +28,21 @@ venv\Scripts\activate
 source venv/bin/activate
 
 pip install -r requirements.txt
-python generate_data.py
 python validator.py
 ```
+
+---
 
 ## Relational Database Extension (`/sql`)
 
 To simulate enterprise ERP environments, this project includes a normalized SQLite database architecture and SQL query library:
-* **`schema.sql`**: Third Normal Form (3NF) schema with primary/foreign keys, B-tree indexes, and an executive reporting view (`v_vendor_performance_summary`).
-* **`ingest_to_db.py`**: Automated Python ETL script normalizing `orders_raw.csv` into relational tables with foreign key validation.
-* **`queries.sql` & `run_queries.py`**: Analytical SQL audit suite calculating supplier defect rates, stalled transit capital, missing shipping zips, and ledger discrepancies.
-* **`DESIGN.md`**: Comprehensive architectural design thesis prepared for the Harvard University CS50 SQL Capstone.
+* **`schema.sql`**: Third Normal Form (3NF) schema with primary/foreign keys, B-tree indexes, and a SQL reporting view (`v_vendor_performance_summary`).
+* **`ingest_to_db.py`**: Automated Python ETL script that normalizes `orders_raw.csv`, quarantines colliding duplicate Order IDs to `quarantined_duplicates.csv` to prevent vendor misattribution, and enforces transactional row-count reconciliation.
+* **`queries.sql` & `run_queries.py`**: Analytical SQL audit suite tracking vendor overdue rates, recorded value of overdue open orders, and ledger discrepancies against the 2026-10-31 benchmark date.
+* **`DESIGN.md`**: Architectural design document detailing the 3NF data model, indexing decisions, and operational assumptions.
+
+### Database Execution:
+```bash
+python sql/ingest_to_db.py
+python sql/run_queries.py
+```

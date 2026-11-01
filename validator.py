@@ -45,7 +45,7 @@ def run_pipeline(
         "exception_type": "DUPLICATE_ORDER_ID",
         "severity": "CRITICAL",
         "action_required": (
-            "Cancel duplicate PO in POS/ERP; verify billing ledger."
+            "Investigate repeated order ID; confirm correct records before changing or cancelling an order."
         ),
         "details": f"Order ID {row['order_id']} appears multiple times.",
     })
