@@ -48,7 +48,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 python generate_data.py
 python validator.py
----
+```
 
 ## Relational Database Extension (`/sql`)
 
