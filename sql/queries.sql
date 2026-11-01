@@ -45,7 +45,7 @@ FROM orders o
 JOIN vendors v ON o.vendor_id = v.vendor_id
 JOIN order_items oi ON o.order_id = oi.order_id
 WHERE (o.shipping_zip IS NULL OR TRIM(o.shipping_zip) = '')
-  AND o.status IN ('Cancelled', 'Inactive')
+  AND o.status NOT IN ('Cancelled', 'Inactive')
 GROUP BY o.order_id, o.customer_name, v.vendor_name, o.order_date
 ORDER BY order_total_usd DESC;
 
