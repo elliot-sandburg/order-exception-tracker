@@ -1,0 +1,7 @@
+order_id,customer_name,vendor_name,order_date,expected_delivery,status,quantity,unit_price,shipping_zip
+1050,Cascade Builders,Daltile,2026-10-13,2026-10-17,Delivered,131,30.43,97402
+1050,Eugene Remodeling,Armstrong Flooring,2026-10-12,2026-10-17,Cancelled,157,37.29,97408
+1180,Willamette Homes,Armstrong Flooring,2026-10-10,2026-10-16,Delivered,161,22.61,97401
+1180,Pacific Construction,Daltile,2026-10-15,2026-11-10,Open,298,69.55,97401
+1340,Emerald Valley Co,Daltile,2026-10-07,2026-10-13,Delivered,168,20.89,97401
+1340,Emerald Valley Co,Armstrong Flooring,2026-10-06,2026-11-10,Open,99,68.25,97402

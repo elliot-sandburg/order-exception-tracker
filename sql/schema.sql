@@ -1,6 +1,6 @@
 -- ============================================================
 -- RETAIL OPERATIONS & EXCEPTION AUDITING DATABASE
--- Harvard CS50 SQL Capstone Project / Tier 2 Data Pipeline
+-- Independent Portfolio Project: 3NF Relational Architecture
 -- ============================================================
 
 PRAGMA foreign_keys = ON;
@@ -18,7 +18,7 @@ CREATE TABLE vendors (
     status TEXT NOT NULL DEFAULT 'Active'
 );
 
--- 2. PURCHASE ORDERS (Header Table)
+-- 2. PURCHASE ORDERS (Header Table - Non-Conflicting Orders)
 CREATE TABLE orders (
     order_id TEXT PRIMARY KEY,
     customer_name TEXT NOT NULL,
@@ -53,7 +53,7 @@ CREATE INDEX idx_orders_vendor_id
 ON orders (vendor_id);
 
 -- ============================================================
--- REPORTING OPTIMIZATION: MATERIALIZED LOGICAL VIEW
+-- SQL REPORTING VIEW
 -- ============================================================
 
 CREATE VIEW v_vendor_performance_summary AS
@@ -61,9 +61,9 @@ SELECT
     v.vendor_id,
     v.vendor_name,
     COUNT(DISTINCT o.order_id) AS total_orders_placed,
-    SUM(CASE WHEN o.expected_delivery < DATE('now') AND o.status = 'Open' THEN 1 ELSE 0 END) AS total_delayed_orders,
+    COUNT(DISTINCT CASE WHEN o.expected_delivery < '2026-10-31' AND o.status = 'Open' THEN o.order_id END) AS total_delayed_orders,
     ROUND(
-        CAST(SUM(CASE WHEN o.expected_delivery < DATE('now') AND o.status = 'Open' THEN 1 ELSE 0 END) AS FLOAT) 
+        CAST(COUNT(DISTINCT CASE WHEN o.expected_delivery < '2026-10-31' AND o.status = 'Open' THEN o.order_id END) AS FLOAT) 
         / NULLIF(COUNT(DISTINCT o.order_id), 0) * 100, 2
     ) AS overdue_rate_pct,
     COALESCE(ROUND(SUM(oi.quantity * oi.unit_price), 2), 0) AS total_pipeline_value_usd
