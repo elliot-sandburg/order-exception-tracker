@@ -2,6 +2,13 @@
 
 A portfolio project modeling contractor order management, vendor logistics, and exception auditing in building materials distribution.
 
+## 📊 Multi-Tab Discrepancy Report Preview
+### Itemized Exceptions
+![Itemized Exceptions](<Itemized Exceptions.png>)
+
+### Exceptions by Vendor
+![Exceptions by Vendor](<Exceptions by Vendor.png>)
+
 ## Business Context
 In contractor order fulfillment, order entry defects (duplicate POs, missing jobsite postal codes, negative quantities, overdue shipments) frequently bypass standard POS checks. This project automates multi-vendor exception auditing and generates formatted Excel workbooks to speed fulfillment resolution.
 
